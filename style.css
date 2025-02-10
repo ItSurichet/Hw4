@@ -1,14 +1,11 @@
 body {
+    background-color: #e0f7fa;
     font-family: Arial, sans-serif;
   }
-  
-
   .container {
-    max-width: 1200px;
+    max-width: 800px;
   }
-  
-
-  .hidden {
-    display: none;
+  button {
+    transition: background-color 0.3s ease;
   }
   

@@ -2,182 +2,40 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>แอปพลิเคชันหลายโมดูล</title>
-
+  <title>ระบบจัดการตารางนัดหมาย</title>
   <link rel="stylesheet" href="styles.css">
-
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100">
-  <div class="container mx-auto p-4">
-    <h1 class="text-3xl font-bold text-center mb-4">แอปพลิเคชันหลายโมดูล</h1>
-    
- 
-    <nav class="mb-4">
-      <ul class="flex space-x-4 justify-center">
-        <li><button onclick="showSection('expenses')" class="px-4 py-2 bg-blue-500 text-white rounded">บันทึกค่าใช้จ่าย</button></li>
-        <li><button onclick="showSection('inventory')" class="px-4 py-2 bg-blue-500 text-white rounded">จัดการคลังสินค้า</button></li>
-        <li><button onclick="showSection('appointments')" class="px-4 py-2 bg-blue-500 text-white rounded">ตารางนัดหมาย</button></li>
-        <li><button onclick="showSection('quiz')" class="px-4 py-2 bg-blue-500 text-white rounded">แบบทดสอบออนไลน์</button></li>
-      </ul>
-    </nav>
-
-    <!-- ================= ระบบบันทึกค่าใช้จ่าย ================= -->
-    <section id="expenses" class="mb-8">
-      <h2 class="text-2xl font-bold mb-2">ระบบบันทึกค่าใช้จ่ายส่วนตัว</h2>
-      <!-- ฟอร์มสำหรับเพิ่มรายการค่าใช้จ่าย -->
-      <form id="expenseForm" class="mb-4 bg-white p-4 rounded shadow">
-        <div class="mb-2">
-          <label class="block font-medium">ชื่อรายการ:</label>
-          <input type="text" id="expenseTitle" class="border p-2 w-full" required>
+<body class="bg-blue-50">
+  <div class="container mx-auto p-6">
+    <h1 class="text-4xl font-bold text-center mb-6 text-blue-600">ระบบจัดการตารางนัดหมาย</h1>
+    <section id="appointments" class="bg-white shadow-lg rounded p-6">
+      <h2 class="text-2xl font-bold text-blue-600 mb-4">เพิ่มนัดหมายใหม่</h2>
+      <form id="appointmentForm" class="mb-6">
+        <div class="mb-4">
+          <label class="block text-blue-600 font-medium">ชื่อกิจกรรม:</label>
+          <input type="text" id="appointmentTitle" class="w-full border rounded p-2" placeholder="ระบุชื่อกิจกรรม" required>
         </div>
-        <div class="mb-2">
-          <label class="block font-medium">จำนวนเงิน:</label>
-          <input type="number" id="expenseAmount" class="border p-2 w-full" required>
+        <div class="mb-4">
+          <label class="block text-blue-600 font-medium">วันที่:</label>
+          <input type="date" id="appointmentDate" class="w-full border rounded p-2" required>
         </div>
-        <div class="mb-2">
-          <label class="block font-medium">ประเภท:</label>
-          <select id="expenseCategory" class="border p-2 w-full">
-            <option value="อาหาร">อาหาร</option>
-            <option value="การเดินทาง">การเดินทาง</option>
-            <option value="ความบันเทิง">ความบันเทิง</option>
-            <option value="ค่าสาธารณูปโภค">ค่าสาธารณูปโภค</option>
-          </select>
+        <div class="mb-4">
+          <label class="block text-blue-600 font-medium">เวลาเริ่มต้น:</label>
+          <input type="time" id="appointmentStartTime" class="w-full border rounded p-2" required>
         </div>
-        <div class="mb-2">
-          <label class="block font-medium">วันที่:</label>
-          <input type="date" id="expenseDate" class="border p-2 w-full" required>
+        <div class="mb-4">
+          <label class="block text-blue-600 font-medium">เวลาสิ้นสุด:</label>
+          <input type="time" id="appointmentEndTime" class="w-full border rounded p-2" required>
         </div>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">เพิ่มค่าใช้จ่าย</button>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          เพิ่มนัดหมาย
+        </button>
       </form>
-
-      <!-- ส่วนกรองรายการค่าใช้จ่าย -->
-      <div class="mb-4 bg-white p-4 rounded shadow">
-        <label class="font-medium">กรองตามวันที่: </label>
-        <input type="date" id="filterExpenseDate" class="border p-2">
-        <label class="ml-4 font-medium">กรองตามประเภท: </label>
-        <select id="filterExpenseCategory" class="border p-2">
-          <option value="">ทั้งหมด</option>
-          <option value="อาหาร">อาหาร</option>
-          <option value="การเดินทาง">การเดินทาง</option>
-          <option value="ความบันเทิง">ความบันเทิง</option>
-          <option value="ค่าสาธารณูปโภค">ค่าสาธารณูปโภค</option>
-        </select>
-        <button id="filterExpenseBtn" class="bg-blue-500 text-white px-4 py-2 rounded ml-4">กรอง</button>
-      </div>
-
-      <!-- แสดงรายการค่าใช้จ่าย -->
-      <h3 class="text-xl font-bold mb-2">รายการค่าใช้จ่าย</h3>
-      <ul id="expenseList" class="list-disc pl-5 bg-white p-4 rounded shadow"></ul>
-
-      <!-- ปุ่มสร้างรายงานรายเดือน -->
-      <div class="mt-4">
-        <button id="monthlyReportBtn" class="bg-purple-500 text-white px-4 py-2 rounded">สร้างรายงานรายเดือน</button>
-        <div id="monthlyReport" class="mt-2"></div>
-      </div>
-    </section>
-
-    <!-- ================= ระบบจัดการคลังสินค้า ================= -->
-    <section id="inventory" class="hidden mb-8">
-      <h2 class="text-2xl font-bold mb-2">ระบบจัดการคลังสินค้า</h2>
-      <!-- ฟอร์มสำหรับเพิ่มสินค้า -->
-      <form id="productForm" class="mb-4 bg-white p-4 rounded shadow">
-        <div class="mb-2">
-          <label class="block font-medium">ชื่อสินค้า:</label>
-          <input type="text" id="productName" class="border p-2 w-full" required>
-        </div>
-        <div class="mb-2">
-          <label class="block font-medium">ราคา:</label>
-          <input type="number" id="productPrice" class="border p-2 w-full" required>
-        </div>
-        <div class="mb-2">
-          <label class="block font-medium">จำนวนคงคลัง:</label>
-          <input type="number" id="productInStock" class="border p-2 w-full" required>
-        </div>
-        <div class="mb-2">
-          <label class="block font-medium">ประเภทสินค้า:</label>
-          <select id="productCategory" class="border p-2 w-full">
-            <option value="อิเล็กทรอนิกส์">อิเล็กทรอนิกส์</option>
-            <option value="เสื้อผ้า">เสื้อผ้า</option>
-            <option value="อาหาร">อาหาร</option>
-          </select>
-        </div>
-        <div class="mb-2">
-          <label class="block font-medium">จำนวนขั้นต่ำ:</label>
-          <input type="number" id="productMinStock" class="border p-2 w-full" required>
-        </div>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">เพิ่มสินค้า</button>
-      </form>
-
-      <h3 class="text-xl font-bold mb-2">รายการสินค้า</h3>
-      <ul id="productList" class="list-disc pl-5 bg-white p-4 rounded shadow"></ul>
-
-      <!-- ตรวจสอบสินค้าคงคลังน้อย -->
-      <div class="mt-4 bg-white p-4 rounded shadow">
-        <button id="lowStockBtn" class="bg-red-500 text-white px-4 py-2 rounded">ตรวจสอบสินค้าคงเหลือน้อย</button>
-        <div id="lowStockReport" class="mt-2"></div>
-      </div>
-
-      <!-- สร้างรายงานยอดขาย -->
-      <div class="mt-4 bg-white p-4 rounded shadow">
-        <button id="salesReportBtn" class="bg-purple-500 text-white px-4 py-2 rounded">สร้างรายงานยอดขาย</button>
-        <div id="salesReport" class="mt-2"></div>
-      </div>
-
-      <!-- ฟอร์มสำหรับอัปเดตจำนวนสินค้า (จำลองการขาย) -->
-      <h3 class="text-xl font-bold mt-4 mb-2">อัปเดตจำนวนสินค้า / จำลองการขาย</h3>
-      <form id="updateStockForm" class="mb-4 bg-white p-4 rounded shadow">
-        <div class="mb-2">
-          <label class="block font-medium">รหัสสินค้า:</label>
-          <input type="text" id="updateProductId" class="border p-2 w-full" required>
-        </div>
-        <div class="mb-2">
-          <label class="block font-medium">จำนวน (ใช้ลบสำหรับการขาย):</label>
-          <input type="number" id="updateQuantity" class="border p-2 w-full" required>
-        </div>
-        <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded">อัปเดตสินค้า</button>
-      </form>
-    </section>
-
-    <!-- ================= ระบบจัดการตารางนัดหมาย ================= -->
-    <section id="appointments" class="hidden mb-8">
-      <h2 class="text-2xl font-bold mb-2">ระบบจัดการตารางนัดหมาย</h2>
-      <!-- ฟอร์มสำหรับเพิ่มนัดหมาย -->
-      <form id="appointmentForm" class="mb-4 bg-white p-4 rounded shadow">
-        <div class="mb-2">
-          <label class="block font-medium">ชื่อกิจกรรม:</label>
-          <input type="text" id="appointmentTitle" class="border p-2 w-full" required>
-        </div>
-        <div class="mb-2">
-          <label class="block font-medium">วันที่:</label>
-          <input type="date" id="appointmentDate" class="border p-2 w-full" required>
-        </div>
-        <div class="mb-2">
-          <label class="block font-medium">เวลาเริ่มต้น:</label>
-          <input type="time" id="appointmentStartTime" class="border p-2 w-full" required>
-        </div>
-        <div class="mb-2">
-          <label class="block font-medium">เวลาสิ้นสุด:</label>
-          <input type="time" id="appointmentEndTime" class="border p-2 w-full" required>
-        </div>
-        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">เพิ่มนัดหมาย</button>
-      </form>
-
-      <h3 class="text-xl font-bold mb-2">รายการนัดหมาย</h3>
-      <ul id="appointmentList" class="list-disc pl-5 bg-white p-4 rounded shadow"></ul>
-    </section>
-
-    <!-- ================= ระบบแบบทดสอบออนไลน์ ================= -->
-    <section id="quiz" class="hidden mb-8">
-      <h2 class="text-2xl font-bold mb-2">ระบบแบบทดสอบออนไลน์</h2>
-      <button id="startQuizBtn" class="bg-green-500 text-white px-4 py-2 rounded mb-4">เริ่มแบบทดสอบ</button>
-      <div id="quizContainer" class="mb-4 bg-white p-4 rounded shadow"></div>
-      <div id="quizTimer" class="text-xl font-bold mb-4"></div>
-      <div id="quizResults" class="bg-white p-4 rounded shadow"></div>
+      <h2 class="text-2xl font-bold text-blue-600 mb-4">รายการนัดหมาย</h2>
+      <ul id="appointmentList" class="space-y-3"></ul>
     </section>
   </div>
-  
-
   <script src="app.js"></script>
 </body>
 </html>
